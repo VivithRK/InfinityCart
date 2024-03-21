@@ -1,1 +1,1 @@
-console.log("Hello world");
+// ! to run command  => npm run server
