@@ -1,24 +1,25 @@
-// ! to run command  => npm run server
-
-const express = require("express");
-const session = require("express-session");
-const MongoStore = require("connect-mongo");
-require("dotenv").config();
-require("./config/dbconnect");
-const userRoutes = require("./routes/userRoute");
-const bodyParser = require("body-parser");
-
-// !file import
-
-// * routes
-
+const dotenv = require('dotenv');
+dotenv.config();
+require('./config/db');
+const express = require('express');
+const mongoose = require('mongoose');
 const app = express();
+const session = require('express-session');
+const port = process.env.PORT
+const userRoutes = require('./routes/userRoute');
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
 app.use(express.json());
 
-app.use("/users", userRoutes);
+const sessionSecret = process.env.SESSION_SECRET;
+app.use(session({
+    secret: sessionSecret,
+    resave: false,
+    saveUninitialized: false,
+}));
 
-// *middlewares
+app.use('/users', userRoutes);
 
-// !server listen
-const port = process.env.port || 9000;
-app.listen(port, console.log("Server is running on port " + port));
+app.listen(port, () => {
+    console.log("Server running");
+})
